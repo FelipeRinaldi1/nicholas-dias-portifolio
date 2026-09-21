@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { Play } from "lucide-react";
 import { ShowreelModal } from "./ShowreelModal";
+import {trackEvent} from "@/lib/analytics";
 
 interface MainShowreelProps {
   positioningTag?: string;
@@ -20,6 +21,10 @@ export function MainShowreel({
   showreelVideoUrl = "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1",
 }: MainShowreelProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const handlePlayReel = () => {
+    trackEvent("showreel_play", { video_title: headline, video_url: showreelVideoUrl });
+    setIsModalOpen(true);
+  }
 
   return (
     <section id="showreel" className="py-24 px-6 max-w-6xl mx-auto">
@@ -40,10 +45,10 @@ export function MainShowreel({
 
       {/* Showreel Card with Trigger */}
       <div
-        onClick={() => setIsModalOpen(true)}
+        onClick={handlePlayReel}
         role="button"
         tabIndex={0}
-        onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && setIsModalOpen(true)}
+        onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && handlePlayReel()}
         className="group relative w-full aspect-video rounded-2xl md:rounded-3xl overflow-hidden border border-zinc-800/80 bg-zinc-950 cursor-pointer shadow-2xl transition-all duration-500 hover:border-zinc-700 hover:shadow-zinc-900/40"
         aria-label="Assistir showreel oficial completo com áudio"
       >

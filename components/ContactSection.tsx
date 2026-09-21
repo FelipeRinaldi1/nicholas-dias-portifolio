@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { Mail, MapPin, Send, MessageCircle } from "lucide-react";
+import {trackEvent} from "@/lib/analytics";
 
 interface ContactSectionProps {
   email?: string;
@@ -12,14 +13,15 @@ interface ContactSectionProps {
 
 export function ContactSection({
   email = "contato@nicholasdias.com",
-  whatsappNumber = "5511999999999",
-  whatsappDisplay = "+55 (11) 99999-9999",
+  whatsappNumber = "5512997707739",
+  whatsappDisplay = "+55 (12) 99770-7739",
   location = "São Paulo, SP - Disponível globalmente",
 }: ContactSectionProps) {
   const [submitted, setSubmitted] = useState(false);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    trackEvent("lead_form_submitted",{form_name:"contact_form"});
     setSubmitted(true);
   };
 
@@ -47,6 +49,7 @@ export function ContactSection({
                 href={`https://wa.me/${whatsappNumber}`}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={()=>{trackEvent("whatsapp_click",{number: whatsappNumber})}}
                 className="flex items-center gap-3 p-4 rounded-2xl bg-zinc-950 border border-zinc-850 hover:border-zinc-700 transition-colors group"
               >
                 <div className="w-10 h-10 rounded-xl bg-emerald-950/50 border border-emerald-800/40 flex items-center justify-center text-emerald-400 group-hover:scale-105 transition-transform">

@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { GoogleAnalytics } from "@/components/GoogleAnalytics";
+import { siteConfig } from "@/lib/site-config";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -13,10 +15,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://nicholasdias.com"),
-  title: "Nicholas Dias | Director & Filmmaker",
-  description:
-    "Portfolio criativo e audiovisual de Nicholas Dias. Direção criativa, filmes publicitários, aftermovies e narrativas de alto impacto visual.",
+  metadataBase: new URL(siteConfig.url),
+  title: siteConfig.name,
+  description: siteConfig.description,
   keywords: [
     "Nicholas Dias",
     "Filmmaker",
@@ -54,14 +55,47 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+        const jsonLd = {                                                                                                                         
+        "@context": "https://schema.org",                                                                                                      
+        "@type": "Person",                                                                                                                     
+        name: siteConfig.author,                                                                                                               
+        jobTitle: "Director & Cinematographer",                                                                                                
+        url: siteConfig.url,                                                                                                                   
+        address: {                                                                                                                             
+          "@type": "PostalAddress",                                                                                                            
+          addressLocality: "São Paulo",                                                                                                        
+          addressRegion: "SP",                                                                                                                 
+          addressCountry: "BR",                                                                                                                
+        },                                                                                                                                     
+        sameAs: [                                                                                                                              
+          siteConfig.socials.instagram,                                                                                                        
+          siteConfig.socials.vimeo,                                                                                                            
+          siteConfig.socials.youtube,                                                                                                          
+          siteConfig.socials.linkedin,                                                                                                         
+        ],                                                                                                                                     
+        knowsAbout: [                                                                                                                          
+          "Film Direction",                                                                                                                    
+          "Cinematography",                                                                                                                    
+          "Audiovisual Production",                                                                                                            
+          "Commercial Films",                                                                                                                  
+          "Aftermovies",                                                                                                                       
+        ],                                                                                                                                     
+      };        
   return (
     <html
       lang="pt-BR"
       className={`${geistSans.variable} ${geistMono.variable} dark h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-black text-zinc-100 selection:bg-white selection:text-black">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
         {children}
+        {process.env.NEXT_PUBLIC_GA_ID && <GoogleAnalytics GA_MEASUREMENT_ID={process.env.NEXT_PUBLIC_GA_ID} />}
+
       </body>
+
     </html>
   );
 }
